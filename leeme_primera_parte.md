@@ -1,4 +1,4 @@
-Estructura de Carpetas y Archivos Iniciales
+## Estructura de Carpetas y Archivos Iniciales
 Una vez completados los pasos de configuración inicial (1-7), esta será la estructura dentro de UIII_Joyería_8475:
 
     UIII_Joyería_8475/
