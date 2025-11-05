@@ -33,6 +33,53 @@ Una vez completados los pasos de configuración inicial (1-7), esta será la est
 💻 Código del Proyecto Joyería
 A continuación, se presenta el código para los archivos clave.
 
+## Models: 
+
+    `python
+    from django.db import models
+    # =-=-=-=-=-
+    # ==========================================
+    # MODELO: PROVEEDOR
+    # ==========================================
+    class Proveedor(models.Model):
+    id_proveedor = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=100)
+    apellido = models.CharField(max_length=100)
+    direccion = models.CharField(max_length=200)
+    telefono = models.CharField(max_length=15)
+    correo = models.EmailField()
+    tipo_suministro = models.CharField(max_length=100)
+    def __str__(self):
+    return f"{self.nombre} {self.apellido}"
+    # ==========================================
+    # MODELO: PRODUCTO
+    # ==========================================
+    class Producto(models.Model):
+    id_producto = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=100)
+    material = models.CharField(max_length=100)
+    precio = models.DecimalField(max_digits=10, decimal_places=2)
+    tipo = models.CharField(max_length=100)
+    stock = models.IntegerField()
+    id_proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE,
+    related_name='productos')
+    def __str__(self):
+    return self.nombre
+    # ==========================================
+    # MODELO: VENTA
+    # ==========================================
+    class Venta(models.Model):
+    id_venta = models.AutoField(primary_key=True)
+    id_cliente = models.IntegerField()
+    id_empleado = models.IntegerField()
+    fecha_venta = models.DateField()
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+    metodo_pago = models.CharField(max_length=50)
+    productos = models.ManyToManyField(Producto, related_name='ventas')
+    def __str__(self):
+    return f"Venta #{self.id_venta} - Total: ${self.total}"
+    # =-=-=-=-=-
+
 1. Configuración del Proyecto (backend_Joyería/settings.py)
 Debes agregar app_Joyería a INSTALLED_APPS.
 
@@ -179,7 +226,7 @@ Implementación de las funciones para el CRUD de Proveedor.
 🎨 Plantillas HTML
 Se utilizará Bootstrap para un diseño suave y moderno.
 
-7. Plantilla Base (app_Joyería/templates/base.html)
+## 7. Plantilla Base (app_Joyería/templates/base.html)
 Incluye Bootstrap CSS y JS.
 
 HTML
@@ -221,7 +268,7 @@ HTML
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </body>
     </html>
-8. Barra de Navegación (app_Joyería/templates/navbar.html)
+## 8. Barra de Navegación (app_Joyería/templates/navbar.html)
 Incluye todas las opciones del menú.
 
 HTML
@@ -276,7 +323,7 @@ HTML
             </div>
         </div>
     </nav>
-9. Footer (app_Joyería/templates/footer.html)
+## 9. Footer (app_Joyería/templates/footer.html)
 Footer fijo con la información solicitada.
 
 HTML
@@ -288,7 +335,7 @@ HTML
             </span>
         </div>
     </footer>
-10. Inicio (app_Joyería/templates/inicio.html)
+## 10. Inicio (app_Joyería/templates/inicio.html)
 Página de inicio con una imagen.
 
 HTML
@@ -371,7 +418,7 @@ HTML
         </div>
     </div>
     {% endblock %}
-12. Ver Proveedores (app_Joyería/templates/proveedor/ver_proveedores.html)
+## 12. Ver Proveedores (app_Joyería/templates/proveedor/ver_proveedores.html)
 Tabla con botones para Ver, Editar y Borrar.
 
 HTML
@@ -429,8 +476,7 @@ HTML
         </div>
     {% endif %}
     {% endblock %}
-    13. Actualizar Proveedor (app_Joyería/templates/proveedor/actualizar_proveedor.html)
-    Formulario pre-cargado para la edición.
+## 13. Actualizar Proveedor (app_Joyería/templates/proveedor/actualizar_proveedor.html) Formulario pre-cargado para la edición.
     
     HTML
     
@@ -480,7 +526,7 @@ HTML
         </div>
     </div>
     {% endblock %}
-14. Borrar Proveedor (app_Joyería/templates/proveedor/borrar_proveedor.html)
+## 14. Borrar Proveedor (app_Joyería/templates/proveedor/borrar_proveedor.html)
 Página de confirmación de eliminación.
 
 HTML
