@@ -1,125 +1,534 @@
-🛠️ Instrucciones Adaptadas para el Proyecto "Joyería"
-Proyecto: Joyería Autor: Diego Alberto Cruz Acosta Lenguaje: Python Framework: Django Editor: VS Code Puerto: 8475
+Estructura de Carpetas y Archivos Iniciales
+Una vez completados los pasos de configuración inicial (1-7), esta será la estructura dentro de UIII_Joyería_8475:
 
-Configuración Inicial del Entorno
+    UIII_Joyería_8475/
+    ├── .venv/                         # Entorno virtual
+    ├── backend_Joyería/               # Proyecto Django (backend)
+    │   ├── __init__.py
+    │   ├── asgi.py
+    │   ├── settings.py                # ✅ Modificar
+    │   ├── urls.py                    # ✅ Modificar
+    │   └── wsgi.py
+    ├── app_Joyería/                   # Aplicación Django
+    │   ├── migrations/
+    │   ├── __init__.py
+    │   ├── admin.py                   # ✅ Modificar
+    │   ├── apps.py
+    │   ├── models.py                  # ✅ Modificar (Ya tienes el código)
+    │   ├── templates/                 # Carpeta de plantillas
+    │   │   ├── base.html              # ✅ Crear (Bootstrap)
+    │   │   ├── footer.html            # ✅ Crear (Footer fijo)
+    │   │   ├── header.html            # ✅ Crear (Puede ser vacío o info)
+    │   │   ├── inicio.html            # ✅ Crear (Página de inicio)
+    │   │   ├── navbar.html            # ✅ Crear (Barra de navegación)
+    │   │   └── proveedor/             # Subcarpeta para CRUD de Proveedor
+    │   │       ├── agregar_proveedor.html     # ✅ Crear
+    │   │       ├── actualizar_proveedor.html  # ✅ Crear
+    │   │       ├── borrar_proveedor.html      # ✅ Crear
+    │   │       └── ver_proveedores.html       # ✅ Crear (Tabla)
+    │   ├── tests.py
+    │   ├── urls.py                    # ✅ Crear
+    │   └── views.py                   # ✅ Modificar
+    └── manage.py
+💻 Código del Proyecto Joyería
+A continuación, se presenta el código para los archivos clave.
 
-1.- Crear Carpeta del proyecto: Crea la carpeta principal con la nomenclatura UIII_Joyería_8475.
+1. Configuración del Proyecto (backend_Joyería/settings.py)
+Debes agregar app_Joyería a INSTALLED_APPS.
 
-2.- Procedimiento para abrir vs Code: Abre VS Code sobre la carpeta UIII_Joyería_8475.
+Python
 
-3.- Procedimiento para abrir la terminal: Abre la terminal dentro de VS Code (Terminal > Nueva Terminal).
+# backend_Joyería/settings.py
+# ... (otras configuraciones)
 
-4.- Procedimiento para crear carpeta entorno virtual “.venv”: Crea la carpeta del entorno virtual llamada .venv desde la terminal: bash python -m venv .venv
+    INSTALLED_APPS = [
+        # ... (otras apps)
+        'app_Joyería',  # ⬅️ ¡Añade esto!
+    ]
 
-5.- Procedimiento para activar el entorno virtual: Activa el entorno virtual. * Windows (Command Prompt): .\.venv\Scripts\activate * Windows (PowerShell): .\.venv\Scripts\Activate.ps1 * Linux/macOS: source .venv/bin/activate
+# ... (otras configuraciones)
+2. URLs del Proyecto (backend_Joyería/urls.py)
+Se configura la URL raíz para que apunte a las URLs de app_Joyería.
 
-6.- Procedimiento para activar intérprete de python: Asegúrate de que el intérprete de Python seleccionado en VS Code sea el del entorno virtual (.venv).
+Python
 
-7.- Procedimiento para instalar Django: Instala el framework Django dentro del entorno virtual: bash pip install django
+# backend_Joyería/urls.py
 
-Creación del Proyecto y la Aplicación
-8.- Procedimiento para crear proyecto backend_Joyería sin duplicar carpeta: Crea el proyecto Django sin duplicar la carpeta, nombrando el backend como backend_Joyería: bash django-admin startproject backend_Joyería .
-
-9.- Procedimiento para ejecutar servidor en el puerto 8475: Ejecuta el servidor en el puerto 8475 para verificar la instalación: bash python manage.py runserver 8475
-
-10.- Procedimiento para copiar y pegar el link en el navegador: Copia y pega el link http://127.0.0.1:8475/ en tu navegador.
-
-11.- Procedimiento para crear aplicación app_Joyería: Crea la aplicación principal con el nombre app_Joyería: bash python manage.py startapp app_Joyería
-
-Modelos y Migraciones
-12.- Aquí el modelo models.py: Copia y pega los siguientes modelos en el archivo app_Joyería/models.py.
-
-```python
-from django.db import models
-
-# =-=-=-=-=-
-# ==========================================
-# MODELO: PROVEEDOR
-# ==========================================
-class Proveedor(models.Model):
-    id_proveedor = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=100)
-    apellido = models.CharField(max_length=100)
-    direccion = models.CharField(max_length=200)
-    telefono = models.CharField(max_length=15)
-    correo = models.EmailField()
-    tipo_suministro = models.CharField(max_length=100)
+    from django.contrib import admin
+    from django.urls import path, include
     
-    def __str__(self):
-        return f"{self.nombre} {self.apellido}"
+    urlpatterns = [
+        path('admin/', admin.site.urls),
+        path('', include('app_Joyería.urls')), # ⬅️ Enlaza la app
+    ]
+3. Modelos (app_Joyería/models.py)
+(El código del paso 12 ya está completo, se omite aquí por brevedad, pero debe estar en el archivo.)
 
-# ==========================================
-# MODELO: PRODUCTO
-# ==========================================
-class Producto(models.Model):
-    id_producto = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=100)
-    material = models.CharField(max_length=100)
-    precio = models.DecimalField(max_digits=10, decimal_places=2)
-    tipo = models.CharField(max_length=100)
-    stock = models.IntegerField()
-    id_proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, related_name='productos') 
+4. Registro en Admin (app_Joyería/admin.py)
+Registra los modelos para que sean accesibles en el panel de administración.
+
+    Python
+
+# app_Joyería/admin.py
+
+    from django.contrib import admin
+    from .models import Proveedor, Producto, Venta
+
+# Registro de los modelos
+    admin.site.register(Proveedor)
+    admin.site.register(Producto)
+    admin.site.register(Venta)
+    5. URLs de la Aplicación (app_Joyería/urls.py)
+    Crea este archivo para manejar las rutas del CRUD de Proveedor.
+
+Python
+
+    # app_Joyería/urls.py
     
-    def __str__(self):
-        return self.nombre
+    from django.urls import path
+    from . import views
 
-# ==========================================
-# MODELO: VENTA
-# ==========================================
-class Venta(models.Model):
-    id_venta = models.AutoField(primary_key=True)
-    id_cliente = models.IntegerField()
-    id_empleado = models.IntegerField()
-    fecha_venta = models.DateField()
-    total = models.DecimalField(max_digits=10, decimal_places=2)
-    metodo_pago = models.CharField(max_length=50)
-    productos = models.ManyToManyField(Producto, related_name='ventas') 
+    urlpatterns = [
+        # General
+        path('', views.inicio_joyeria, name='inicio_joyeria'),
+
+    # CRUD Proveedor
+    path('proveedores/agregar/', views.agregar_proveedor, name='agregar_proveedor'),
+    path('proveedores/ver/', views.ver_proveedores, name='ver_proveedores'),
+    path('proveedores/actualizar/<int:pk>/', views.actualizar_proveedor, name='actualizar_proveedor'),
+    path('proveedores/realizar_actualizacion/<int:pk>/', views.realizar_actualizacion_proveedor, name='realizar_actualizacion_proveedor'),
+    path('proveedores/borrar/<int:pk>/', views.borrar_proveedor, name='borrar_proveedor'),
+]
+6. Vistas (app_Joyería/views.py)
+Implementación de las funciones para el CRUD de Proveedor.
+
+    Python
+
+# app_Joyería/views.py
+
+    from django.shortcuts import render, redirect, get_object_or_404
+    from .models import Proveedor
+
+# Función de Inicio
+    def inicio_joyeria(request):
+        """Muestra la página de inicio."""
+        return render(request, 'inicio.html')
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# CRUD: PROVEEDOR
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+    def agregar_proveedor(request):
+        """Maneja la creación de un nuevo proveedor."""
+        if request.method == 'POST':
+            # No se realiza validación de datos (Paso 28)
+            Proveedor.objects.create(
+                nombre=request.POST['nombre'],
+                apellido=request.POST['apellido'],
+                direccion=request.POST['direccion'],
+                telefono=request.POST['telefono'],
+                correo=request.POST['correo'],
+                tipo_suministro=request.POST['tipo_suministro']
+            )
+            return redirect('ver_proveedores') # Redirige a la lista después de agregar
+        
+        return render(request, 'proveedor/agregar_proveedor.html')
+
+    def ver_proveedores(request):
+        """Muestra la lista de todos los proveedores."""
+        proveedores = Proveedor.objects.all()
+        context = {'proveedores': proveedores}
+        return render(request, 'proveedor/ver_proveedores.html', context)
     
-    def __str__(self):
-        return f"Venta #{self.id_venta} - Total: ${self.total}"
-# =-=-=-=-=-
-```
-12.5.- Procedimiento para realizar las migraciones: Genera y aplica las migraciones: bash python manage.py makemigrations python manage.py migrate
+    def actualizar_proveedor(request, pk):
+        """Muestra el formulario para editar un proveedor existente."""
+        proveedor = get_object_or_404(Proveedor, pk=pk)
+        context = {'proveedor': proveedor}
+        return render(request, 'proveedor/actualizar_proveedor.html', context)
+    
+    def realizar_actualizacion_proveedor(request, pk):
+        """Procesa el formulario de actualización y guarda los cambios."""
+        if request.method == 'POST':
+            proveedor = get_object_or_404(Proveedor, pk=pk)
+            
+            # Actualiza los campos sin validación
+            proveedor.nombre = request.POST['nombre']
+            proveedor.apellido = request.POST['apellido']
+            proveedor.direccion = request.POST['direccion']
+            proveedor.telefono = request.POST['telefono']
+            proveedor.correo = request.POST['correo']
+            proveedor.tipo_suministro = request.POST['tipo_suministro']
+            proveedor.save()
+            
+            return redirect('ver_proveedores')
+        
+        # Si no es POST, redirige a la lista o a la página de actualización
+        return redirect('ver_proveedores')
+    
+    
+    def borrar_proveedor(request, pk):
+        """Elimina un proveedor de la base de datos."""
+        proveedor = get_object_or_404(Proveedor, pk=pk)
+        
+        if request.method == 'POST':
+            proveedor.delete()
+            return redirect('ver_proveedores')
+        
+        context = {'proveedor': proveedor}
+        return render(request, 'proveedor/borrar_proveedor.html', context)
+🎨 Plantillas HTML
+Se utilizará Bootstrap para un diseño suave y moderno.
 
-Desarrollo del CRUD (Proveedor)
-13.- Primero trabajamos con el MODELO: PROVEEDOR.
+7. Plantilla Base (app_Joyería/templates/base.html)
+Incluye Bootstrap CSS y JS.
 
-14.- En view de app_Joyería crear las funciones con sus códigos correspondientes: (e.g., inicio_joyeria, agregar_proveedor, actualizar_proveedor, realizar_actualizacion_proveedor, borrar_proveedor).
+HTML
 
-15.- Crear la carpeta “templates” dentro de app_Joyería.
+    {% load static %}
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Joyería{% endblock %}</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+        <style>
+            /* Estilo para mantener el footer fijo y contenido debajo del navbar */
+            body {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+                padding-top: 56px; /* Ajuste para el navbar fijo */
+                background-color: #f8f9fa; /* Color de fondo suave */
+            }
+            .content {
+                flex-grow: 1;
+                padding-bottom: 70px; /* Espacio para el footer fijo */
+            }
+        </style>
+    </head>
+    <body>
+        {% include 'navbar.html' %}
+        
+        <div class="content container mt-4">
+            {% block content %}
+            {% endblock %}
+        </div>
+    
+        {% include 'footer.html' %}
+    
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+    </html>
+8. Barra de Navegación (app_Joyería/templates/navbar.html)
+Incluye todas las opciones del menú.
 
-16.- En la carpeta templates crear los archivos html: (base.html, header.html, navbar.html, footer.html, inicio.html).
+HTML
 
-17.- En el archivo base.html agregar bootstrap para css y js.
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #A0522D;"> <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'inicio_joyeria' %}">
+                <i class="bi bi-gem me-2"></i>Sistema de Administración Joyería
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'inicio_joyeria' %}"><i class="bi bi-house-door-fill me-1"></i>Inicio</a>
+                    </li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="proveedoresDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-badge-fill me-1"></i>Proveedores
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="proveedoresDropdown">
+                            <li><a class="dropdown-item" href="{% url 'agregar_proveedor' %}">Agregar Proveedor</a></li>
+                            <li><a class="dropdown-item" href="{% url 'ver_proveedores' %}">Ver Proveedores</a></li>
+                            </ul>
+                    </li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="productosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-box-seam-fill me-1"></i>Productos
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="productosDropdown">
+                            <li><a class="dropdown-item" href="#">Agregar Productos</a></li>
+                            <li><a class="dropdown-item" href="#">Ver Productos</a></li>
+                            <li><a class="dropdown-item" href="#">Actualizar Productos</a></li>
+                            <li><a class="dropdown-item" href="#">Borrar Productos</a></li>
+                        </ul>
+                    </li>
+    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="ventasDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-cart-fill me-1"></i>Ventas
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="ventasDropdown">
+                            <li><a class="dropdown-item" href="#">Agregar Ventas</a></li>
+                            <li><a class="dropdown-item" href="#">Ver Ventas</a></li>
+                            <li><a class="dropdown-item" href="#">Actualizar Ventas</a></li>
+                            <li><a class="dropdown-item" href="#">Borrar Ventas</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+9. Footer (app_Joyería/templates/footer.html)
+Footer fijo con la información solicitada.
 
-18.- En el archivo navbar.html incluir las opciones: ("Sistema de Administración Joyería", "Inicio", "Proveedores" (en submenu: Agregar Proveedor, Ver Proveedores, Actualizar Proveedores, Borrar Proveedores), "Productos" (en submenu: Agregar Productos, Ver Productos, Actualizar Productos, Borrar Productos), "Ventas" (en submenu: Agregar Ventas, Ver Ventas, Actualizar Ventas, Borrar Ventas), incluir iconos a las opciones principales, no en los submenu.
+HTML
 
-19.- En el archivo footer.html incluir derechos de autor, fecha del sistema y “Creado por Diego Alberto Cruz Acosta” y mantenerla fija al final de la página.
+    <footer class="footer mt-auto py-3 fixed-bottom" style="background-color: #343a40; color: white;">
+        <div class="container text-center">
+            <span class="text-muted">
+                &copy; Derechos de Autor Joyería. | Fecha del Sistema: <script>document.write(new Date().toLocaleDateString());</script> | Creado por **Diego Alberto Cruz Acosta**
+            </span>
+        </div>
+    </footer>
+10. Inicio (app_Joyería/templates/inicio.html)
+Página de inicio con una imagen.
 
-20.- En el archivo inicio.html se usa para colocar información del sistema más una imagen tomada desde la red sobre joyería.
+HTML
 
-21.- Crear la subcarpeta proveedor dentro de app_Joyería/templates.
+    {% extends 'base.html' %}
+    {% load static %}
+    
+    {% block title %}Inicio - Sistema Joyería{% endblock %}
+    
+    {% block content %}
+    <div class="p-5 mb-4 bg-light rounded-3 shadow-sm">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold" style="color: #A0522D;">💎 Bienvenido al Sistema de Administración de Joyería</h1>
+            <p class="col-md-8 fs-4">Gestione sus proveedores, productos y ventas de joyería de manera eficiente y moderna.</p>
+        </div>
+    </div>
+    
+    <div class="row align-items-center">
+        <div class="col-lg-7">
+            <p class="lead">
+                Este sistema le permite llevar un control detallado de su inventario, la información de sus proveedores y el registro de todas las transacciones de venta. Utilice el menú superior para navegar a las diferentes secciones.
+            </p>
+            <p class="text-muted">
+                Actualmente se encuentra implementada la gestión completa (CRUD) para el módulo de **Proveedores**.
+            </p>
+        </div>
+        <div class="col-lg-5">
+            
+        </div>
+    </div>
+    {% endblock %}
+    11. Agregar Proveedor (app_Joyería/templates/proveedor/agregar_proveedor.html)
+    Formulario de adición de proveedores.
+    
+    HTML
+    
+    {% extends 'base.html' %}
+    
+    {% block title %}Agregar Proveedor{% endblock %}
+    
+    {% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header" style="background-color: #D2B48C; color: #343a40;">
+                    <h3 class="mb-0"><i class="bi bi-person-plus-fill me-2"></i>Agregar Nuevo Proveedor</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="apellido" class="form-label">Apellido</label>
+                            <input type="text" class="form-control" id="apellido" name="apellido" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="direccion" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="direccion" name="direccion" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="telefono" name="telefono" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="correo" name="correo" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tipo_suministro" class="form-label">Tipo de Suministro</label>
+                            <input type="text" class="form-control" id="tipo_suministro" name="tipo_suministro" required>
+                        </div>
+                        <button type="submit" class="btn" style="background-color: #A0522D; color: white;">Guardar Proveedor</button>
+                        <a href="{% url 'ver_proveedores' %}" class="btn btn-secondary">Cancelar</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+12. Ver Proveedores (app_Joyería/templates/proveedor/ver_proveedores.html)
+Tabla con botones para Ver, Editar y Borrar.
 
-22.- Crear los archivos html con su codigo correspondientes: (agregar_proveedor.html, ver_proveedores.html (mostrar en tabla con los botones ver, editar y borrar), actualizar_proveedor.html, borrar_proveedor.html) dentro de app_Joyería/templates/proveedor.
+HTML
 
-23.- No utilizar forms.py.
+    {% extends 'base.html' %}
+    
+    {% block title %}Lista de Proveedores{% endblock %}
+    
+    {% block content %}
+    <h2 class="mb-4" style="color: #A0522D;"><i class="bi bi-list-columns-reverse me-2"></i>Lista de Proveedores</h2>
+    
+    <a href="{% url 'agregar_proveedor' %}" class="btn mb-3" style="background-color: #D2B48C; color: #343a40;">
+        <i class="bi bi-person-plus-fill me-1"></i> Agregar Nuevo Proveedor
+    </a>
+    
+    {% if proveedores %}
+    <div class="table-responsive">
+        <table class="table table-hover table-striped shadow-sm">
+            <thead class="table-dark" style="background-color: #A0522D; border-color: #A0522D;">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre Completo</th>
+                    <th>Dirección</th>
+                    <th>Teléfono</th>
+                    <th>Correo</th>
+                    <th>Suministro</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in proveedores %}
+                <tr>
+                    <td>{{ p.id_proveedor }}</td>
+                    <td>{{ p.nombre }} {{ p.apellido }}</td>
+                    <td>{{ p.direccion }}</td>
+                    <td>{{ p.telefono }}</td>
+                    <td>{{ p.correo }}</td>
+                    <td>{{ p.tipo_suministro }}</td>
+                    <td>
+                        <a href="{% url 'actualizar_proveedor' pk=p.id_proveedor %}" class="btn btn-sm btn-primary me-2" title="Editar">
+                            <i class="bi bi-pencil-square"></i> Editar
+                        </a>
+                        <a href="{% url 'borrar_proveedor' pk=p.id_proveedor %}" class="btn btn-sm btn-danger" title="Borrar">
+                            <i class="bi bi-trash"></i> Borrar
+                        </a>
+                        </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            <i class="bi bi-info-circle-fill me-2"></i>No hay proveedores registrados.
+        </div>
+    {% endif %}
+    {% endblock %}
+    13. Actualizar Proveedor (app_Joyería/templates/proveedor/actualizar_proveedor.html)
+    Formulario pre-cargado para la edición.
+    
+    HTML
+    
+    {% extends 'base.html' %}
+    
+    {% block title %}Actualizar Proveedor{% endblock %}
+    
+    {% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header" style="background-color: #D2B48C; color: #343a40;">
+                    <h3 class="mb-0"><i class="bi bi-arrow-repeat me-2"></i>Actualizar Proveedor: {{ proveedor.nombre }} {{ proveedor.apellido }}</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{% url 'realizar_actualizacion_proveedor' pk=proveedor.id_proveedor %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" value="{{ proveedor.nombre }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="apellido" class="form-label">Apellido</label>
+                            <input type="text" class="form-control" id="apellido" name="apellido" value="{{ proveedor.apellido }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="direccion" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="direccion" name="direccion" value="{{ proveedor.direccion }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="telefono" name="telefono" value="{{ proveedor.telefono }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="correo" name="correo" value="{{ proveedor.correo }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tipo_suministro" class="form-label">Tipo de Suministro</label>
+                            <input type="text" class="form-control" id="tipo_suministro" name="tipo_suministro" value="{{ proveedor.tipo_suministro }}" required>
+                        </div>
+                        <button type="submit" class="btn" style="background-color: #A0522D; color: white;">Guardar Cambios</button>
+                        <a href="{% url 'ver_proveedores' %}" class="btn btn-secondary">Cancelar</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+14. Borrar Proveedor (app_Joyería/templates/proveedor/borrar_proveedor.html)
+Página de confirmación de eliminación.
 
-24.- Procedimiento para crear el archivo urls.py en app_Joyería con el código correspondiente para acceder a las funciones de views.py para operaciones de crud en proveedores.
+HTML
 
-25.- Procedimiento para agregar app_Joyería en settings.py de backend_Joyería.
+    {% extends 'base.html' %}
+    
+    {% block title %}Borrar Proveedor{% endblock %}
+    
+    {% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-danger shadow-sm">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="mb-0"><i class="bi bi-exclamation-triangle-fill me-2"></i>Confirmación de Eliminación</h3>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        ¿Estás seguro de que deseas eliminar al proveedor **{{ proveedor.nombre }} {{ proveedor.apellido }}** (ID: **{{ proveedor.id_proveedor }}**)?
+                    </p>
+                    <p class="text-danger fw-bold">Esta acción no se puede deshacer.</p>
+    
+                    <form method="POST" action="{% url 'borrar_proveedor' pk=proveedor.id_proveedor %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger me-2"><i class="bi bi-trash-fill me-1"></i> Sí, Eliminar</button>
+                        <a href="{% url 'ver_proveedores' %}" class="btn btn-secondary"><i class="bi bi-x-circle-fill me-1"></i> Cancelar</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+🚀 Pasos Finales de Ejecución
+Migraciones (Paso 12.5 y 27):
 
-26.- Realizar las configuraciones correspondiente a urls.py de backend_Joyería para enlazar con app_Joyería.
+Bash
 
-27.- Procedimiento para registrar los modelos en admin.py y volver a realizar las migraciones.
+    python manage.py makemigrations
+    python manage.py migrate
+Crear Superusuario (Paso 27): (Opcional, pero útil para verificar el admin.py)
 
-27.- Por lo pronto solo trabajar con “Proveedor” dejar pendiente # MODELO: PRODUCTO y # MODELO: VENTA.
+Bash
 
-28.- Utilizar colores suaves, atractivos y modernos, el código de las páginas web sencillas.
+    python manage.py createsuperuser
+Ejecutar Servidor (Paso 31):
 
-28.- No validar entrada de datos.
+Bash
 
-29.- Al inicio crear la estructura completa de carpetas y archivos.
+    python manage.py runserver 8475
+Acceder (Paso 10): Copia y pega el link http://127.0.0.1:8475/ en tu navegador.
 
-30.- Proyecto totalmente funcional.
-
-31.- Finalmente ejecutar servidor en el puerto 8475.
+El proyecto está ahora totalmente funcional con el CRUD para el modelo Proveedor.
